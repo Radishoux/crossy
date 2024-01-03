@@ -5,7 +5,7 @@ module.exports = {
 
   getFittingWords: function (matrix = [[]], words = []) {
 
-    if (matrix.length == 0) {
+    if (matrix == [[]]) {
       return words;
     }
 
@@ -37,6 +37,28 @@ module.exports = {
       // potato: { vertical: [[-1, 14]], horizontal: [[8, -3]] },
     };
 
+    for (var i = 0; i < similarLetterWords.length; i++) {
+      var word = similarLetterWords[i];
+      for (var j = 0; j < word.length; j++) {
+        var letter = word[j];
+        for (var k = 0; k < matrix.length; k++) {
+          for (var l = 0; l < matrix[k].length; l++) {
+            if (matrix[k][l] == letter) {
+              if (fittingWords[word] == undefined) {
+                fittingWords[word] = { vertical: [], horizontal: [] };
+              }
+
+              // vertically fitting
+              // look up
+
+              for (var m = j; m >= 0; m--) {
+
+              }
+            }
+          }
+        }
+      }
+    }
 
 
     return fittingWords;
