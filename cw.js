@@ -20,12 +20,7 @@ module.exports = {
       words.push(word);
     }
 
-    console.log(words, "getwords words 1");
-
     words = words.filter((item, pos) => { return item && item.length > 1; })
-
-    console.log(words, "getwords words 2");
-
 
     return words
   },
@@ -78,8 +73,6 @@ module.exports = {
       }
     }
 
-    console.log(matrix, "matrix"); // ca c'est bon
-
     var possible = [
       // [
       //   [
@@ -104,8 +97,6 @@ module.exports = {
     words = this.getFittingWords(matrix, words);
 
     var allWords = words.concat(this.getWords(matrix));
-
-    console.log(words, allWords, "words");
 
     words.forEach(word => {
 
@@ -132,7 +123,6 @@ module.exports = {
 
       for (var l = 0; l < word.length; l++) {
         //todo
-
       }
 
       probable.forEach(matrix => {
