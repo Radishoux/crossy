@@ -130,23 +130,8 @@ module.exports = {
         // ]
       ];
 
-
       for (var l = 0; l < word.length; l++) {
-
-        for (var y = 0; y < matrix.length; y++) {
-          for (var x = 0; x < matrix[y].length; x++) {
-
-            if (word[l] == matrix[y][x]) {
-              if (this.dispo(matrix, x, y + 1) && this.dispo(matrix, x, y - 1)) {
-                probable.push(this.addWord(matrix, word, x, y, 0, 1));
-              }
-              if (this.dispo(matrix, x + 1, y) && this.dispo(matrix, x - 1, y)) {
-                probable.push(this.addWord(matrix, word, x, y, 1, 0));
-              }
-            }
-
-          }
-        }
+        //todo
 
       }
 
