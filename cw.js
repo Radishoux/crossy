@@ -1,10 +1,25 @@
 module.exports = {
-  checkWordMatrix: function (matrix = [[]], words = []) {
+  getWords: function (matrix = [[]]) {
+    var words = [];
+    for (var i = 0; i < matrix.length; i++) {
+      var word = "";
+      for (var j = 0; j < matrix[i].length; j++) {
+        word += matrix[i][j];
+      }
+      words.push(word);
+    }
+    for (var i = 0; i < matrix[0].length; i++) {
+      var word = "";
+      for (var j = 0; j < matrix.length; j++) {
+        word += matrix[j][i];
+      }
+      words.push(word);
+    }
 
+    return words.filter((item, pos) => { return item.length>1 ; })
   },
 
   getFittingWords: function (matrix = [[]], words = []) {
-
     if (matrix == [[]]) {
       return words;
     }
@@ -20,7 +35,7 @@ module.exports = {
 
     // clear letters from duplicates
 
-    letters = letters.filter((item, pos) => { return letters.indexOf(item) == pos; });
+    letters = letters.filter((item, pos) => { return (item!='') && (letters.indexOf(item) == pos)  ; });
 
     // filter words with fitting letters
     var similarLetterWords = [];
@@ -33,46 +48,53 @@ module.exports = {
       }
     }
 
-    var fittingWords = {
-      // potato: { vertical: [[-1, 14]], horizontal: [[8, -3]] },
-    };
-
-    for (var i = 0; i < similarLetterWords.length; i++) {
-      var word = similarLetterWords[i];
-      for (var j = 0; j < word.length; j++) {
-        var letter = word[j];
-        for (var k = 0; k < matrix.length; k++) {
-          for (var l = 0; l < matrix[k].length; l++) {
-            if (matrix[k][l] == letter) {
-              if (fittingWords[word] == undefined) {
-                fittingWords[word] = { vertical: [], horizontal: [] };
-              }
-
-              // vertically fitting
-              // look up
-
-              for (var m = j; m >= 0; m--) {
-
-              }
-            }
-          }
-        }
-      }
-    }
-
-
-    return fittingWords;
+    return similarLetterWords;
   },
 
-  generate: function (words = [], clues = []) {
+  getMatrixes: function (matrix = [[]], words = []) {
 
-    var matrix = [[]];
+    var possible = [
+      // [
+      //   [
+      //     ["p", "o", "s", "s", "i", "b", "l", "e"],
+      //     ["", "", "t", "", "", "", "", ""],
+      //     ["", "", "a", "", "", "", "", ""],
+      //     ["", "", "b", "", "", "", "", ""],
+      //     ["", "", "l", "", "", "", "", ""],
+      //     ["", "", "e", "", "", "", "", ""]
+      //   ],
+      //   [
+      //     ["", "", "", "", "", "s", "", ""],
+      //     ["", "", "", "", "", "t", "", ""],
+      //     ["", "", "", "", "", "a", "", ""],
+      //     ["p", "o", "s", "s", "i", "b", "l", "e"],
+      //     ["", "", "", "", "", "l", "", ""],
+      //     ["", "", "", "", "", "e", "", ""],
+      //   ]
+      // ]
+    ];
+
+    
+
+    return possible;
+  },
+
+  generate: function (words = [], clues = [], maxwords = 10, maxtries = 100) {
+
+    var matrix = [
+      ["c", "a", "r", "r", "o", "t", "t", "e"],
+      ["", "", "", "", "", "o", "", ""],
+      ["", "", "", "", "", "m", "", ""],
+      ["", "", "", "", "", "a", "", ""],
+      ["", "", "", "", "", "t", "", ""],
+      ["", "", "", "b", "l", "e", "u", ""]
+    ];
 
     // getFittingWords
     // read mattrix, if empty return rand word else return a list of words with fitting letters
     // select word rand
     // place word in matrix and pop from list
     // repeat until list is empty or no fitting words are found
-    return "This is a crossword!"
+    return matrix;
   },
 };
