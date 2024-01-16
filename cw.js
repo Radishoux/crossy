@@ -1,3 +1,5 @@
+const { all } = require("axios");
+
 module.exports = {
   getWords: function (matrix = [[]]) {
     var words = [];
@@ -8,15 +10,24 @@ module.exports = {
       }
       words.push(word);
     }
-    for (var i = 0; i < matrix[0].length; i++) {
+    for (var i = 0; i < matrix[(matrix.length/2)].length; i++) {
       var word = "";
       for (var j = 0; j < matrix.length; j++) {
-        word += matrix[j][i];
+        if (matrix[j][i] != undefined) {
+          word += matrix[j][i];
+        }
       }
       words.push(word);
     }
 
-    return words.filter((item, pos) => { return item.length>1 ; })
+    console.log(words, "getwords words 1");
+
+    words = words.filter((item, pos) => { return item && item.length > 1; })
+
+    console.log(words, "getwords words 2");
+
+
+    return words
   },
 
   getFittingWords: function (matrix = [[]], words = []) {
@@ -35,7 +46,7 @@ module.exports = {
 
     // clear letters from duplicates
 
-    letters = letters.filter((item, pos) => { return (item!='') && (letters.indexOf(item) == pos)  ; });
+    letters = letters.filter((item, pos) => { return (item != '') && (letters.indexOf(item) == pos); });
 
     // filter words with fitting letters
     var similarLetterWords = [];
@@ -52,6 +63,22 @@ module.exports = {
   },
 
   getMatrixes: function (matrix = [[]], words = []) {
+
+    if (matrix == [[]]) {
+      return [[words[Math.floor(Math.random() * words.length)]]];
+    }
+
+
+    for (var z = 0; z < 30; z++) {
+      matrix.push([""]);
+      matrix.unshift([""]);
+      for (let y = 0; y < matrix.length; y++) {
+        matrix[y].push("");
+        matrix[y].unshift("");
+      }
+    }
+
+    console.log(matrix, "matrix"); // ca c'est bon
 
     var possible = [
       // [
@@ -74,9 +101,79 @@ module.exports = {
       // ]
     ];
 
+    words = this.getFittingWords(matrix, words);
 
+    var allWords = words.concat(this.getWords(matrix));
+
+    console.log(words, allWords, "words");
+
+    words.forEach(word => {
+
+      var probable = [
+        // [
+        //   [
+        //     ["p", "o", "s", "s", "i", "b", "l", "e"],
+        //     ["", "", "t", "", "", "", "", ""],
+        //     ["", "", "a", "", "", "", "", ""],
+        //     ["", "", "b", "l", "e", "u", "", ""],
+        //     ["", "", "l", "", "", "", "", ""],
+        //     ["", "", "e", "", "", "", "", ""]
+        //   ],
+        //   [
+        //     ["", "", "", "", "", "s", "", ""],
+        //     ["", "", "", "", "", "t", "t", ""],
+        //     ["", "", "", "", "", "a", "a", ""],
+        //     ["p", "o", "s", "s", "i", "b", "l", "e"],
+        //     ["", "", "", "", "", "l", "l", ""],
+        //     ["", "", "", "", "", "e", "e", ""],
+        //   ]
+        // ]
+      ];
+
+
+      for (var l = 0; l < word.length; l++) {
+
+        for (var y = 0; y < matrix.length; y++) {
+          for (var x = 0; x < matrix[y].length; x++) {
+
+            if (word[l] == matrix[y][x]) {
+              if (this.dispo(matrix, x, y + 1) && this.dispo(matrix, x, y - 1)) {
+                probable.push(this.addWord(matrix, word, x, y, 0, 1));
+              }
+              if (this.dispo(matrix, x + 1, y) && this.dispo(matrix, x - 1, y)) {
+                probable.push(this.addWord(matrix, word, x, y, 1, 0));
+              }
+            }
+
+          }
+        }
+
+      }
+
+      probable.forEach(matrix => {
+        var atmWords = this.getWords(matrix);
+
+        if (atmWords.filter(item => allWords.indexOf(item) < 0).length < 1) {
+          possible.push(matrix);
+        }
+
+      });
+
+    });
 
     return possible;
+  },
+
+  dispo: function (matrix = [[]], x, y) {
+    return (matrix[y][x] == '') || false;
+  },
+
+  addWord: function (matrix = [[]], word, x, y, dx, dy) {
+    var newmatrix = matrix;
+    for (var i = 0; i < word.length; i++) {
+      newmatrix[y + i * dy][x + i * dx] = word[i];
+    }
+    return newmatrix;
   },
 
   generate: function (words = [], clues = [], maxwords = 10, maxtries = 100) {
@@ -90,11 +187,6 @@ module.exports = {
       ["", "", "", "b", "l", "e", "u", ""]
     ];
 
-    // getFittingWords
-    // read mattrix, if empty return rand word else return a list of words with fitting letters
-    // select word rand
-    // place word in matrix and pop from list
-    // repeat until list is empty or no fitting words are found
     return matrix;
   },
 };
