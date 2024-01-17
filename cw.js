@@ -10,7 +10,7 @@ module.exports = {
       }
       words.push(word);
     }
-    for (var i = 0; i < matrix[(matrix.length/2)].length; i++) {
+    for (var i = 0; i < matrix[(matrix.length / 2)].length; i++) {
       var word = "";
       for (var j = 0; j < matrix.length; j++) {
         if (matrix[j][i] != undefined) {
@@ -122,7 +122,25 @@ module.exports = {
       ];
 
       for (var l = 0; l < word.length; l++) {
-        //todo
+        var letter = word[l];
+        for (let y = 0; y < matrix.length; y++) {
+          for (let x = 0; x < matrix[y].length; x++) {
+
+            if (matrix[y][x] == letter) {
+
+              if (this.dispo(matrix, x + 1, y) && this.dispo(matrix, x - 1, y)) {
+                probable.push(this.addWord(matrix, word, x, y, 1, 0, l));
+              }
+
+              if (this.dispo(matrix, x, y + 1) && this.dispo(matrix, x, y - 1)) {
+                probable.push(this.addWord(matrix, word, x, y, 0, 1, l));
+              }
+
+            }
+
+          }
+
+        }
       }
 
       probable.forEach(matrix => {
@@ -142,11 +160,26 @@ module.exports = {
   dispo: function (matrix = [[]], x, y) {
     return (matrix[y][x] == '') || false;
   },
+  // bug il place au mauvais endroit
+  addWord: function (matrix = [[]], word, x, y, dx, dy, l) {
+    var newmatrix = this.cloneMatrix(matrix);
+    for (var i = l; i < word.length; i++) {
+      if (word[i + 1] != undefined)
+        newmatrix[y + (dy * i)][x + (dx * i)] = word[i + 1];
+    }
+    for (var i = l; i >= 0; i--) {
+      if (word[i - 1] != undefined)
+        newmatrix[y - (dy * i)][x - (dx * i)] = word[i - 1];
+    }
 
-  addWord: function (matrix = [[]], word, x, y, dx, dy) {
-    var newmatrix = matrix;
-    for (var i = 0; i < word.length; i++) {
-      newmatrix[y + i * dy][x + i * dx] = word[i];
+
+    return newmatrix;
+  },
+
+  cloneMatrix: function (matrix = [[]]) {
+    var newmatrix = [];
+    for (var i = 0; i < matrix.length; i++) {
+      newmatrix[i] = matrix[i].slice();
     }
     return newmatrix;
   },
