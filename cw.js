@@ -1,6 +1,7 @@
 const { all } = require("axios");
 
 module.exports = {
+  // todo, get words qui choppe les mots espacés par des espaces
   getWords: function (matrix = [[]]) {
     var words = [];
     for (var i = 0; i < matrix.length; i++) {
@@ -163,15 +164,16 @@ module.exports = {
   // bug il place au mauvais endroit
   addWord: function (matrix = [[]], word, x, y, dx, dy, l) {
     var newmatrix = this.cloneMatrix(matrix);
-    for (var i = l; i < word.length; i++) {
-      if (word[i + 1] != undefined)
-        newmatrix[y + (dy * i)][x + (dx * i)] = word[i + 1];
-    }
-    for (var i = l; i >= 0; i--) {
-      if (word[i - 1] != undefined)
-        newmatrix[y - (dy * i)][x - (dx * i)] = word[i - 1];
+
+    if (dx == 1) {
+      x -= l;
+    } else {
+      y -= l;
     }
 
+    for (var i = 0; i < word.length; i++) {
+      newmatrix[y + dy * i][x + dx * i] = word[i];
+    }
 
     return newmatrix;
   },
